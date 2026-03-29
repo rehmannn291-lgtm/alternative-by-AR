@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alternative by AR</title>
+<style>
+body{margin:0;font-family:Poppins;background:#fff;}
+nav{display:flex;justify-content:space-between;align-items:center;padding:15px 30px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,0.1);}
+.logo{font-weight:700;font-size:24px;}
+nav input{padding:8px;width:200px;}
+.icons span{margin-left:15px;cursor:pointer;font-size:18px;}
+.hero{height:80vh;background:url('https://images.unsplash.com/photo-1512436991641-6745cdb1723f') center/cover;display:flex;align-items:center;padding:40px;color:#fff;}
+.hero h1{font-size:50px;}
+.section{padding:50px 20px;text-align:center;}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.card{border:1px solid #eee;padding:10px;transition:.3s;}
+.card:hover{transform:translateY(-5px);}
+.card img{width:100%;}
+.price{color:red;font-weight:bold;}
+button{padding:8px 15px;margin-top:5px;cursor:pointer;border:none;background:black;color:white;}
+button:hover{background:#444;}
+.filters button{margin:5px;}
+.cart{position:fixed;right:-350px;top:0;width:300px;height:100%;background:#fff;box-shadow:-2px 0 10px rgba(0,0,0,.2);padding:20px;transition:.3s;overflow:auto;}
+.cart.active{right:0;}
+#wishlist{display:none;padding:20px;background:#f4f4f4;position:fixed;top:0;left:0;width:300px;height:100%;overflow:auto;}
+.adminPanel{display:none;padding:20px;background:#f4f4f4;}
+.footer{background:black;color:white;text-align:center;padding:15px;}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="logo">AR<br><small>Alternative</small></div>
+<input type="text" id="search" placeholder="Search..." onkeyup="searchProduct()">
+<div class="icons">
+<span onclick="toggleCart()">🛒</span>
+<span onclick="showWishlist()">❤️</span>
+<span onclick="adminLogin()">⚙️</span>
+</div>
+</nav>
+
+<div class="hero">
+<h1>Alternative by AR</h1>
+</div>
+
+<div class="section">
+<h2>Categories</h2>
+<div class="filters">
+<button onclick="filter('all')">All</button>
+<button onclick="filter('tshirt')">T-Shirts</button>
+<button onclick="filter('hoodie')">Hoodies</button>
+<button onclick="filter('shirt')">Shirts</button>
+</div>
+</div>
+
+<div class="section">
+<h2>Products</h2>
+<div class="products" id="products"></div>
+</div>
+
+<!-- Cart -->
+<div class="cart" id="cart">
+<h2>Your Cart</h2>
+<div id="cartItems"></div>
+<h3 id="total">Total: 0</h3>
+<button onclick="checkout()">Checkout</button>
+</div>
+
+<!-- Wishlist -->
+<div id="wishlist">
+<h2>Wishlist</h2>
+<div id="wishlistItems"></div>
+<button onclick="closeWishlist()">Close</button>
+</div>
+
+<!-- Admin Panel -->
+<div class="adminPanel" id="adminPanel">
+<h2>Admin Panel</h2>
+<input id="pname" placeholder="Product Name"><br><br>
+<input id="pprice" placeholder="Price"><br><br>
+<input id="pimg" placeholder="Image URL"><br><br>
+<select id="pcat">
+<option value="tshirt">T-Shirt</option>
+<option value="hoodie">Hoodie</option>
+<option value="shirt">Shirt</option>
+</select><br><br>
+<button onclick="addProduct()">Add Product</button>
+<button onclick="saveProducts()">Save Changes</button>
+</div>
+
+<div class="footer">© 2026 Alternative by AR</div>
+
+<script>
+// PRODUCTS
+let products = JSON.parse(localStorage.getItem('products')) || [
+{name:"T-Shirt Black",price:1500,cat:"tshirt",img:"https://images.unsplash.com/photo-1523381210434-271e8be1f52b"},
+{name:"White Hoodie",price:3200,cat:"hoodie",img:"https://images.unsplash.com/photo-1520975922203-bc64b3b1c99b"},
+{name:"Formal Shirt",price:2500,cat:"shirt",img:"https://images.unsplash.com/photo-1503342217505-b0a15ec3261c"},
+{name:"Denim Jacket",price:4500,cat:"hoodie",img:"https://images.unsplash.com/photo-1541099649105-f69ad21f3246"},
+{name:"Polo Shirt",price:1800,cat:"tshirt",img:"https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f"},
+{name:"Casual Shirt",price:2800,cat:"shirt",img:"https://images.unsplash.com/photo-1516826957135-700dedea698c"}
+];
+
+let cart = [];
+let wishlist = [];
+let isAdmin=false;
+
+// DISPLAY PRODUCTS
+function displayProducts(list){
+let html="";
+list.forEach((p,i)=>{
+html+=`<div class="card">
+<img src="${p.img}">
+<h3>${p.name}</h3>
+<p class="price">Rs ${p.price}</p>
+<button onclick="addToCart(${i})">Add to Cart</button>
+<button onclick="addWishlist(${i})">❤️</button>
+</div>`;
+});
+document.getElementById("products").innerHTML=html;
+}
+displayProducts(products);
+
+// CART
+function addToCart(i){cart.push(products[i]);updateCart();}
+function addWishlist(i){wishlist.push(products[i]);alert("Added to wishlist");updateWishlist();}
+function updateCart(){let html=""; let total=0;cart.forEach(p=>{html+=`<p>${p.name} - Rs ${p.price}</p>`;total+=p.price;});document.getElementById("cartItems").innerHTML=html;document.getElementById("total").innerText="Total: "+total;}
+function toggleCart(){document.getElementById("cart").classList.toggle("active");}
+
+// WISHLIST
+function showWishlist(){document.getElementById("wishlist").style.display="block";updateWishlist();}
+function updateWishlist(){let html="";wishlist.forEach(p=>{html+=`<p>${p.name} - Rs ${p.price}</p>`;});document.getElementById("wishlistItems").innerHTML=html;}
+function closeWishlist(){document.getElementById("wishlist").style.display="none";}
+
+// SEARCH & FILTER
+function searchProduct(){let val=document.getElementById("search").value.toLowerCase();let filtered=products.filter(p=>p.name.toLowerCase().includes(val));displayProducts(filtered);}
+function filter(cat){if(cat=="all"){displayProducts(products);return;}let filtered=products.filter(p=>p.cat==cat);displayProducts(filtered);}
+
+// CHECKOUT
+function checkout(){let option = prompt("Type 1 for Cash on Delivery, 2 for Online Payment");let msg="Order:%0A";cart.forEach(p=>{msg+=p.name+" Rs"+p.price+"%0A";});if(option=="1"){window.open("https://wa.me/923088585177?text="+msg+"Payment: COD");}else if(option=="2"){alert("Online Payment Coming Soon");}else{alert("Invalid option");}}
+
+// ADMIN PANEL
+function adminLogin(){let pass=prompt("Enter Admin Password");if(pass==="1234"){isAdmin=true;document.getElementById("adminPanel").style.display="block";alert("Admin Mode ON");}else{alert("Wrong Password");}}
+function addProduct(){if(!isAdmin){alert("Admin only"); return;}let name=document.getElementById("pname").value;let price=parseInt(document.getElementById("pprice").value);let img=document.getElementById("pimg").value;let cat=document.getElementById("pcat").value;products.push({name:name,price:price,cat:cat,img:img});displayProducts(products);alert("Product Added");}
+function saveProducts(){localStorage.setItem('products',JSON.stringify(products));alert("Products Saved ✅");}
+</script>
+
+</body>
+  </html>
