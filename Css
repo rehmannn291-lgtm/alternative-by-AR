@@ -1,0 +1,141 @@
+* {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height:1.6;
+    background: #fff;
+    color: #333;
+}
+
+/* Header */
+header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 50px;
+    background: linear-gradient(90deg, #ff3399, #ff66cc);
+    color:white;
+    position:sticky;
+    top:0;
+    z-index: 100;
+}
+header nav a {
+    color:white;
+    text-decoration:none;
+    margin-left:20px;
+    font-weight:bold;
+    transition: 0.3s;
+}
+header nav a:hover {
+    color: #00ffcc;
+}
+
+/* Hero Section */
+.hero {
+    height:80vh;
+    background: url('https://via.placeholder.com/1200x600') center/cover no-repeat;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+.hero-text {
+    text-align:center;
+    color:white;
+    background-color: rgba(0,0,0,0.5);
+    padding:40px;
+    border-radius:15px;
+}
+.btn {
+    display:inline-block;
+    padding:12px 30px;
+    background: linear-gradient(90deg, #ff3399, #ff66cc);
+    color:white;
+    text-decoration:none;
+    margin-top:20px;
+    font-weight:bold;
+    border-radius:10px;
+    transition: 0.4s;
+}
+.btn:hover {
+    background: #00cc66;
+    color: white;
+    transform: scale(1.05);
+}
+
+/* Products */
+.products {
+    padding:60px 20px;
+    text-align:center;
+    background: #f9f9f9;
+}
+.products h2 {
+    margin-bottom:50px;
+    font-size:2.5em;
+}
+.product-grid {
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:40px;
+}
+.product {
+    width:300px;
+    transition: transform 0.4s, box-shadow 0.4s;
+    border-radius:15px;
+    overflow:hidden;
+    background:white;
+}
+.product img {
+    width:100%;
+    display:block;
+}
+.product:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+.product h3 {
+    margin:15px 0 5px 0;
+}
+.product p {
+    color: #ff3399;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+/* Contact */
+.contact {
+    background:#fff0f5;
+    text-align:center;
+    padding:60px 20px;
+}
+.contact a {
+    color:white;
+    background: linear-gradient(90deg, #ff3399, #ff66cc);
+    padding:10px 25px;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:bold;
+    transition:0.3s;
+}
+.contact a:hover {
+    background: #00cc66;
+}
+
+/* Footer */
+footer {
+    text-align:center;
+    padding:25px;
+    background:black;
+    color:white;
+}
+
+/* Responsive */
+@media (max-width:768px) {
+    header { flex-direction:column; }
+    .product-grid { flex-direction:column; align-items:center; }
+    .hero-text { padding:25px; }
+}
